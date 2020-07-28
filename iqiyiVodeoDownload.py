@@ -5,7 +5,7 @@ from urllib import request
 import re
 import base64
 import shutil
-import gic_mode
+import sys
 
 
 def downloadsVideoMethod():
@@ -58,7 +58,7 @@ def downloadsVideoMethod():
     elif type == "mp4":
         print("mp4: ", resp_param["url"])
         MP4Url = resp_param["url"]
-        request.urlretrieve(url=MP4Url, filename=mp4_save_path, reporthook=gic_mode.Schedule)
+        request.urlretrieve(url=MP4Url, filename=mp4_save_path, reporthook=Schedule)
     else:
         file_path = "http:" + resp_param["url"]
         fileLoad(file_path=file_path, save_dir=save_dir, file_name=file_name)
@@ -126,6 +126,12 @@ def writeTs(url, save_path, referer):
     except Exception as e:
         print("\033[1;31m getTsList error. url is (%s) reason is :\033[0m" % url, e)
 
+def Schedule(a, b, c):
+    per = 100.0 * a * b / c
+    if per > 100:
+        per = 1
+    sys.stdout.write("\r>> downloading...  " + "%.2f%% 已经下载的大小:%ld 文件大小:%ld" % (per, a * b, c) + '\r')
+    sys.stdout.flush()
 
 if __name__ == "__main__":
     # 爱奇艺视频路径
